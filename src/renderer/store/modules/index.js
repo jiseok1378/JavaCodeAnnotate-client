@@ -12,3 +12,4 @@ files.keys().forEach(key => {
 })
 
 export default modules
+export const strict = false

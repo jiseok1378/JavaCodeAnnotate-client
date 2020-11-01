@@ -9,5 +9,15 @@ export async function response(url, method){
         });
     });
 }
+export async function requestData(url, method, data){
+    return new Promise(resolve=>{      
+        request({url : url,method : method, json : {"data" : data}}, (error, response, body) => {
+            if(response && response.statusCode == 200){
+                resolve(response)
+            }            
+        });
+        
+    });
+}
 
 

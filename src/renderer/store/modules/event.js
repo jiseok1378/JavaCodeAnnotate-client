@@ -1,6 +1,9 @@
 const state = {
   main: 0,
   test : '',
+  javaSourcePath : '',
+  javaFiles : [],
+  selectFileList : []
 }
 
 const mutations = {
