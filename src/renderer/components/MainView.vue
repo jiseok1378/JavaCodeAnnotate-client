@@ -9,7 +9,6 @@
         buttons
         name="radio-btn-outline"
       ></b-form-radio-group>
-      
     <table class = "table" >
         <tr>
             <td>파일이름</td>
@@ -26,6 +25,7 @@
                                 :AnnotateTarget="_class.className"
                                 :FileIndex="FileIndex"
                                 :Index="index"
+                                :delete="_class.delete"
                                 :Annotate="_class.classAnnotate"
                                 :Type="'class'"/>
                 </div>
@@ -36,6 +36,7 @@
                                 :AnnotateTarget="_enum.enumName"
                                 :FileIndex="FileIndex"
                                 :Index="index"
+                                :delete="_enum.delete"
                                 :Annotate="_enum.enumAnnotate"
                                 :Type="'enum'"/>
                 </div>
@@ -46,6 +47,7 @@
                                 :AnnotateTarget="_function.functionName"
                                 :FileIndex="FileIndex"
                                 :Index="index"
+                                :delete="_function.delete"
                                 :Annotate="_function.functionAnnotate"
                                 :Type="'function'"/>
                 </div>
@@ -56,6 +58,7 @@
                                 :AnnotateTarget="variable.variableName"
                                 :FileIndex="FileIndex"
                                 :Index="index"
+                                :delete="variable.delete"
                                 :Annotate="variable.variableAnnotate"
                                 :Type="'variable'"/>
                 </div>
@@ -119,7 +122,7 @@ export default {
             });
         },
         async catchWord(word){
-            let data = await this.translate(word.split(" ")[1]);
+            let data = await this.translate(word);
             console.log(data)
             data = data.translated_text[0][0];
             console.log(data)
