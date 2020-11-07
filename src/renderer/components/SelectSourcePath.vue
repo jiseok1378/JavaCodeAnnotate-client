@@ -35,13 +35,24 @@ export default {
           this.$store.state.event.javaSourcePath = directoryPath.filePaths[0]
           this.javaSourcePath = this.$store.state.event.javaSourcePath
         });
-
+        
         const dirTree = await require("directory-tree");
+        
         const tree = await dirTree( this.javaSourcePath, { extensions: /\.java/ }, (item, PATH, stats)=>{
           let files = item.path
           this.javaFiles.push(files);
+
           this.$store.state.event.javaFiles = this.javaFiles
         });
+        
+        console.log(this.$store.state.event.javaFiles)
+        console.log(this.$store.state.event.javaFiles.length)
+        if(this.$store.state.event.javaFiles.length == 0){ 
+            this.javaSourcePath = ''
+            alert('자바 파일이 없습니다!')
+            return;
+        }
+        
         console.log(this.$store.state.event.javaFiles)
       }
     }

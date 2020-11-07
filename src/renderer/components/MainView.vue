@@ -1,6 +1,6 @@
 <template>
-    
     <b-container class="bv-example-row" style = "margin-top : 30px;">
+
     <b-button  @click="startCollector">정보 모으기 시작</b-button>
       <b-form-radio-group
         id="btn-radios-2"
@@ -79,7 +79,6 @@ export default {
     data(){
         return{
             collections : Object,
-            g : '',
             selected: [], // Must be an array reference!
             options: [
                 { text: '클래스', value: 'class' },
@@ -127,7 +126,7 @@ export default {
             data = data.translated_text[0][0];
             console.log(data)
             g = data
-        }
+        },
         
     }
 }

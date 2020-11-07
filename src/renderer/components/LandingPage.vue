@@ -1,7 +1,10 @@
 <template>
   <div>
+    
     <SelectSourcePath/>
+    <ProjectManagement />
     <MainView/>
+    
   </div>
 </template>
 
@@ -13,10 +16,11 @@
   import MainView from "./MainView.vue"
   import 'bootstrap/dist/css/bootstrap.css'
   import 'bootstrap-vue/dist/bootstrap-vue.css'
+  import ProjectManagement from './ProjectManagement.vue'
   export default {
     name: 'landing-page',
     components:{
-      InputClass,SelectSourcePath, FileSelectModal, MainView
+      InputClass,SelectSourcePath, FileSelectModal, MainView, ProjectManagement
     },
     methods: {
       
