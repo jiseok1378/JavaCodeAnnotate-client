@@ -17,26 +17,46 @@
             <td v-if="selected.includes('function')">함수리스트</td>
             <td v-if="selected.includes('variable')">변수 리스트</td>
         </tr>
-        <tr v-for="collection in this.collections" :key="collection">
-            <td>{{collection.fileName}}</td>
+        <tr v-for="(collection, FileIndex) in this.$store.state.event.fileCollection" :key="collection">
+            <td>{{collection.filePath.split("\\")[collection.filePath.split("\\").length - 1]}}</td>
             <td v-if="selected.includes('class')">
-                <p v-for="_class in collection.classList" :key="_class">
-                    {{_class.className}}
+                <p v-for="(_class,index) in collection.classList" :key="_class">
+                    <InputClass :FilePath="collection.filePath"
+                                :AnnotateTarget="_class.className"
+                                :FileIndex="FileIndex"
+                                :Index="index"
+                                :Annotate="_class.classAnnotate"
+                                :Type="'class'"/>
                 </p>
             </td>
             <td v-if="selected.includes('enum')">
-                <p v-for="_enum in collection.enumList" :key="_enum">
-                    {{_enum.enumName}}
+                <p v-for="(_enum, index) in collection.enumList" :key="_enum">
+                    <InputClass :FilePath="collection.filePath"
+                                :AnnotateTarget="_enum.enumName"
+                                :FileIndex="FileIndex"
+                                :Index="index"
+                                :Annotate="_enum.enumAnnotate"
+                                :Type="'enum'"/>
                 </p>
             </td>
             <td v-if="selected.includes('function')">
-                <p v-for="_function in collection.functionList" :key="_function">
-                    {{_function.functionName}}
+                <p v-for="(_function, index) in collection.functionList" :key="_function">
+                    <InputClass :FilePath="collection.filePath"
+                                :AnnotateTarget="_function.functionName"
+                                :FileIndex="FileIndex"
+                                :Index="index"
+                                :Annotate="_function.functionAnnotate"
+                                :Type="'function'"/>
                 </p>
             </td>
             <td v-if="selected.includes('variable')">
-                <p v-for="variable in collection.variableList" :key="variable">
-                    {{variable.variableName}}
+                <p v-for="(variable, index) in collection.variableList" :key="variable">
+                    <InputClass :FilePath="collection.filePath"
+                                :AnnotateTarget="variable.variableName"
+                                :FileIndex="FileIndex"
+                                :Index="index"
+                                :Annotate="variable.variableAnnotate"
+                                :Type="'variable'"/>
                 </p>
             </td>
         </tr>
@@ -46,8 +66,12 @@
 
 <script>
 import { response } from '../common/APIList';
+import InputClass from './InputClass.vue'
 export default {
     name : "MainView",
+    components : {
+        InputClass
+    },
     data(){
         return{
             collections : Object,
@@ -73,7 +97,7 @@ export default {
                 json : true
             }, (error, response, body) =>{
                 console.log(body)
-                this.collections = body.result
+                this.$store.state.event.fileCollection = body.result
             });
         },
         async translate(word){

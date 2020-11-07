@@ -3,7 +3,9 @@ const state = {
   test : '',
   javaSourcePath : '',
   javaFiles : [],
-  selectFileList : []
+  selectFileList : [],
+  fileCollection : Array
+  
 }
 
 const mutations = {

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <InputClass/>
     <SelectSourcePath/>
     <MainView/>
   </div>
