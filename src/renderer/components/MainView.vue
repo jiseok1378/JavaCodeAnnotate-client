@@ -169,7 +169,11 @@ export default {
                     
                 const fs = require("fs")
                 const os = require("os")
-                fs.writeFileSync(`${os.homedir()}\\test.csv`, body)
+                const iconv = require("iconv-lite")
+                const jschardet = require("jschardet")
+                var i = jschardet.detect(body)
+                
+                fs.writeFileSync(`${os.homedir()}\\test.csv`, "\ufeff" + body,'utf-8');
             });
         }
     }
