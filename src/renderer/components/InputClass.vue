@@ -9,7 +9,7 @@
               <input type="text" 
                         class="form-control" 
                         v-model="Annotation" 
-                        placeholder="주석을 입력해주세요." 
+                        placeholder="설명을 입력해주세요" 
                         @change="InputData"
                         :disabled="deleted">
                         

@@ -6,7 +6,7 @@
 
 <script>
   export default {
-    name: 'coyote-builder'
+    name: 'JavaAnnoatate'
   }
 </script>
 

@@ -11,8 +11,15 @@ export default new Router({
       component: require('@/components/LandingPage').default
     },
     {
-      path: '*',
-      redirect: '/'
+      path: '/test',
+      name : 'testPage',
+      component: require('@/components/MainView').default
+    },
+    {
+      path:'/projectSelect',
+      name : 'projectSelectPage',
+      component : require('@/components/ProjectSelect').default
     }
+
   ]
 })

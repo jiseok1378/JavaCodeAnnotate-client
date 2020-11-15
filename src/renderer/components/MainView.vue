@@ -1,7 +1,7 @@
 <template>
     <b-container class="bv-example-row" style = "margin-top : 30px;">
 
-    <b-button  @click="startCollector">정보 모으기 시작</b-button>
+    <b-button  @click="startCollector">정보 모으기 시작</b-button> <b-button @click="makeCSV">csv저장</b-button>
       <b-form-radio-group
         id="btn-radios-2"
         v-model="selected"
@@ -78,7 +78,9 @@ export default {
     },
     data(){
         return{
+            deleteAll : true,
             collections : Object,
+            isCheck :true,
             selected: [], // Must be an array reference!
             options: [
                 { text: '클래스', value: 'class' },
@@ -120,14 +122,56 @@ export default {
                 });
             });
         },
-        async catchWord(word){
-            let data = await this.translate(word);
-            console.log(data)
-            data = data.translated_text[0][0];
-            console.log(data)
-            g = data
+        async deleteAll(){
+            if(this.isCheck){
+                this.isCheck = false
+            }
+            else{
+                this.isCheck = true
+            }
         },
-        
+        async catchWord(word){
+            let data = await this.translate(word).then(async (data)=>{
+                data = await data.translated_text[0][0];
+                console.log(data)
+                return await data
+            });
+
+        },
+        splitWord(word){
+            let spWord = word.split('')
+            let t_word = ''
+
+            spWord.forEach(element => {
+                if(element == element.toUpperCase()){
+                    t_word += " "+ element;
+                    
+                }
+                else{
+                    t_word += element
+                }
+                
+            });
+            let data = this.catchWord(t_word);
+            return data
+        },
+        async makeCSV(){
+            let request = require("request");
+            let fileCollection = this.$store.state.event.fileCollection
+            console.log(fileCollection)
+            request.post({
+                headers : {'content-type' : 'application/json'},
+                url : 'http://localhost:8080/csv',
+                body : fileCollection,
+                json : true
+            }, (error, response, body) =>{
+                console.log(body)
+                    
+                const fs = require("fs")
+                const os = require("os")
+                fs.writeFileSync(`${os.homedir()}\\test.csv`, body)
+            });
+        }
     }
 }
 </script>
