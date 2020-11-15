@@ -18,7 +18,7 @@
             <td v-if="selected.includes('variable')">변수 리스트</td>
         </tr>
         <tr v-for="(collection, FileIndex) in this.$store.state.event.fileCollection" :key="collection">
-            <td>{{collection.filePath.split("\\")[collection.filePath.split("\\").length - 1]}}</td>
+            <td>{{collection.filePath.split(FS)[collection.filePath.split(FS).length - 1]}}</td>
             <td v-if="selected.includes('class')">
                 <div v-for="(_class,index) in collection.classList" :key="_class">
                     <InputClass :FilePath="collection.filePath"
@@ -76,8 +76,21 @@ export default {
     components : {
         InputClass
     },
+    created(){
+        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        const os = require("os")
+        if(os.platform().toUpperCase().includes("WIN")){
+            this.FS = "\\"
+        }
+        else{
+            this.FS = "/"
+        }
+        console.log(this.FS)
+    },
     data(){
         return{
+            csvSavePath : "",
+            FS : "\\",
             deleteAll : true,
             collections : Object,
             isCheck :true,
@@ -101,8 +114,14 @@ export default {
                 body : fileList,
                 json : true
             }, (error, response, body) =>{
-                console.log(body)
-                this.$store.state.event.fileCollection = body.result
+
+                if(response && response.statusCode == 200){
+                    console.log(body)
+                    this.$store.state.event.fileCollection = body.result
+                }
+                else{
+                    alert(error)
+                }
             });
         },
         async translate(word){
@@ -159,21 +178,38 @@ export default {
             let request = require("request");
             let fileCollection = this.$store.state.event.fileCollection
             console.log(fileCollection)
+            let self = this
             request.post({
                 headers : {'content-type' : 'application/json'},
                 url : 'http://localhost:8080/csv',
-                body : fileCollection,
+                body : {"projectPath":this.$store.state.event.javaSourcePath,"data":fileCollection},
                 json : true
-            }, (error, response, body) =>{
-                console.log(body)
-                    
-                const fs = require("fs")
-                const os = require("os")
-                const iconv = require("iconv-lite")
-                const jschardet = require("jschardet")
-                var i = jschardet.detect(body)
-                
-                fs.writeFileSync(`${os.homedir()}\\test.csv`, "\ufeff" + body,'utf-8');
+            }, async (error, response, body) =>{
+                if(response && response.statusCode == 200){
+                    console.log(body)
+                    const remote = require('electron').remote
+                    const fs = require('fs')
+                    const moment = require('moment')
+                    const moment_format = moment().format("YYYY-MM-DD");
+                    await remote.dialog
+                    .showOpenDialog({ properties: ["openDirectory"]})
+                    .then((directoryPath) => {
+                            this.csvSavePath = directoryPath.filePaths[0]
+                    });
+                    let projectName = this.$store.state.event.javaSourcePath.split(this.FS)[this.$store.state.event.javaSourcePath.split(this.FS).length -1]
+                    console.log(this.csvSavePath)
+                    console.log(this.FS)
+                    try{
+                        fs.writeFileSync(`${this.csvSavePath}${this.FS}${moment_format}-${projectName}.csv`, "\ufeff" + body,'utf-8');
+                    }
+                    catch(e){
+                        alert("파일이 열려있습니다!")
+                        return
+                    }
+                }
+                else{
+                    alert(error)
+                }
             });
         }
     }
