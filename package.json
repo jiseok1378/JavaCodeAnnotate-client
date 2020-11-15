@@ -56,6 +56,8 @@
     "bootstrap": "^4.5.3",
     "bootstrap-vue": "^2.18.1",
     "directory-tree": "^2.2.5",
+    "iconv-lite": "^0.6.2",
+    "jschardet": "^2.2.1",
     "request": "^2.88.2",
     "vue": "^2.6.12",
     "vue-electron": "^1.0.6",
